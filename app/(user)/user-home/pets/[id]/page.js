@@ -2,7 +2,7 @@
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getPetById } from "@/app/(user)/user-home/services/petsServices";
-import { getAdoptionCenter } from "@/services/centersService";
+import { getAdoptionCenter } from "@/app/(user)/user-home/services/centersServices";
 import Navigation from "@/app/landing/components/Navigation";
 import Footer from "@/app/landing/components/Footer";
 import Image from "next/image";
