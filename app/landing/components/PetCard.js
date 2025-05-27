@@ -16,7 +16,7 @@ export default function PetCard({ pet, isFeatured = false }) {
       ...file,
       webPath: `${url_base}/${file.webPath}`,
     })),
-  }
+  };
 
   const handleCardClick = () => {
     if (!pet?.id) {
@@ -34,7 +34,6 @@ export default function PetCard({ pet, isFeatured = false }) {
   const handleLike = (e) => {
     e.stopPropagation();
     setIsLiked(!isLiked);
-    // Aquí podrías añadir una llamada a la API para guardar el like
   };
 
   return (

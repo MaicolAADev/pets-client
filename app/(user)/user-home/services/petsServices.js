@@ -12,10 +12,10 @@ export const getPetById = async (id) => {
 
 export const getAdoptionCenters = async () => {
   try {
-    const pets = await getPets() || [];
+    const pets = (await getPets()) || [];
 
     // Filtrar mascotas activas
-    const activePets = pets.filter(p => p.active && p.adoptionCenter?.active);
+    const activePets = pets.filter((p) => p.active && p.adoptionCenter?.active);
 
     // Agrupar mascotas por centro
     const centersMap = new Map();
@@ -34,13 +34,11 @@ export const getAdoptionCenters = async () => {
     }
 
     return Array.from(centersMap.values());
-
   } catch (err) {
     console.error("Error en getAdoptionCenters:", err);
     return [];
   }
 };
-
 
 export const getPetsByCenter = async (adoptionCenter) => {
   const pets = await getPets();

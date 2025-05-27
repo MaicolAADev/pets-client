@@ -21,17 +21,17 @@ export default function PetCardsSection() {
     async function fetchPets() {
       try {
         const petsData = await getPets();
-        
+
         // Asegurarse que petsData es un array
-        const petsArray = Array.isArray(petsData) 
-          ? petsData 
+        const petsArray = Array.isArray(petsData)
+          ? petsData
           : petsData?.data || petsData?.body || [];
-          
+
         setPets(petsArray);
       } catch (err) {
         console.error("Error cargando mascotas:", err);
         setError(err.message);
-        
+
         if (err.message.includes("autenticado")) {
           router.push("/login");
         }
@@ -39,7 +39,7 @@ export default function PetCardsSection() {
         setLoading(false);
       }
     }
-    
+
     fetchPets();
   }, [router]);
 
@@ -89,9 +89,7 @@ export default function PetCardsSection() {
 
   if (error) {
     return (
-      <section className="py-12 text-center text-red-500">
-        {error}
-      </section>
+      <section className="py-12 text-center text-red-500">{error}</section>
     );
   }
 
@@ -227,7 +225,7 @@ export default function PetCardsSection() {
           transition={{ delay: 0.2 }}
           className="text-center mt-8 md:mt-10"
         >
-          <button 
+          <button
             onClick={() => router.push("/user-home/more-pets")}
             className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 md:px-6 md:py-2.5 rounded-lg text-sm md:text-base font-medium inline-flex items-center transition-colors shadow-sm hover:shadow-md"
           >

@@ -2,8 +2,8 @@
 import { useState, useEffect } from "react";
 import PetCard from "@/app/landing/components/PetCard";
 import { getAdoptionCenters } from "@/app/(user)/user-home/services/petsServices";
-import HeaderAuth from '@/app/landing/components/HeaderAuth';
-import Footer from '@/app/landing/components/Footer';
+import HeaderAuth from "@/app/landing/components/HeaderAuth";
+import Footer from "@/app/landing/components/Footer";
 
 const ITEMS_PER_PAGE = 6;
 
@@ -20,7 +20,7 @@ export default function MorePetsPage() {
         const centersWithPets = await getAdoptionCenters();
 
         const initialPages = {};
-        centersWithPets.forEach(center => {
+        centersWithPets.forEach((center) => {
           initialPages[center.id] = 1;
         });
 
@@ -37,22 +37,25 @@ export default function MorePetsPage() {
   }, []);
 
   const handleLoadMore = (centerId) => {
-    setPages(prev => ({
+    setPages((prev) => ({
       ...prev,
-      [centerId]: (prev[centerId] || 1) + 1
+      [centerId]: (prev[centerId] || 1) + 1,
     }));
   };
 
   if (loading) return <div className="text-center py-10">Cargando...</div>;
-  if (error) return <div className="text-center text-red-500 py-10">{error}</div>;
+  if (error)
+    return <div className="text-center text-red-500 py-10">{error}</div>;
 
   return (
     <div className="min-h-screen bg-gray-50">
       <HeaderAuth />
       <main className="px-4 py-8">
-        <h1 className="text-4xl font-bold text-center mb-10">Mascotas disponibles por centro</h1>
+        <h1 className="text-4xl font-bold text-center mb-10">
+          Mascotas disponibles por centro de adopción
+        </h1>
 
-        {adoptionCenters.map(center => {
+        {adoptionCenters.map((center) => {
           const pets = center.pets || [];
           const page = pages[center.id] || 1;
           const displayedPets = pets.slice(0, page * ITEMS_PER_PAGE);
@@ -60,9 +63,9 @@ export default function MorePetsPage() {
           return (
             <div key={center.id} className="mb-12">
               <h2 className="text-2xl font-semibold mb-6">{center.name}</h2>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {displayedPets.map(pet => (
+                {displayedPets.map((pet) => (
                   <PetCard key={pet.id} pet={pet} />
                 ))}
               </div>

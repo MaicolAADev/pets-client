@@ -69,59 +69,65 @@ export default function PetProfilePage() {
     setTimeout(() => setActiveImage(null), 300);
   };
 
-  if (loading) return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
-      <Navigation />
-      <main className="flex-grow flex items-center justify-center">
-        <div className="text-center py-10">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto mb-4"></div>
-          <p>Cargando información de la mascota...</p>
-        </div>
-      </main>
-      <Footer />
-    </div>
-  );
+  if (loading)
+    return (
+      <div className="min-h-screen bg-gray-50 flex flex-col">
+        <Navigation />
+        <main className="flex-grow flex items-center justify-center">
+          <div className="text-center py-10">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto mb-4"></div>
+            <p>Cargando información de la mascota...</p>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
 
-  if (error) return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
-      <Navigation />
-      <main className="flex-grow flex items-center justify-center">
-        <div className="text-center py-10 text-red-500">
-          <p>{error}</p>
-          <button
-            onClick={() => router.push("/pets")}
-            className="mt-4 bg-blue-600 text-white px-4 py-2 rounded"
-          >
-            Volver al listado
-          </button>
-        </div>
-      </main>
-      <Footer />
-    </div>
-  );
+  if (error)
+    return (
+      <div className="min-h-screen bg-gray-50 flex flex-col">
+        <Navigation />
+        <main className="flex-grow flex items-center justify-center">
+          <div className="text-center py-10 text-red-500">
+            <p>{error}</p>
+            <button
+              onClick={() => router.push("/pets")}
+              className="mt-4 bg-blue-600 text-white px-4 py-2 rounded"
+            >
+              Volver al listado
+            </button>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
 
-  if (!pet) return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
-      <Navigation />
-      <main className="flex-grow flex items-center justify-center">
-        <div className="text-center py-10">
-          <p>Mascota no encontrada</p>
-          <button
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
-            onClick={() => router.push("/user/more-pets")}
-          >
-            Ver mascotas
-          </button>
-        </div>
-      </main>
-      <Footer />
-    </div>
-  );
+  if (!pet)
+    return (
+      <div className="min-h-screen bg-gray-50 flex flex-col">
+        <Navigation />
+        <main className="flex-grow flex items-center justify-center">
+          <div className="text-center py-10">
+            <p>Mascota no encontrada</p>
+            <button
+              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+              onClick={() => router.push("/user/more-pets")}
+            >
+              Ver mascotas
+            </button>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <HeaderAuth />
-      <main className="flex-grow container mx-auto px-4 py-10" onClick={closeModal}>
+      <main
+        className="flex-grow container mx-auto px-4 py-10"
+        onClick={closeModal}
+      >
         <div className="bg-white rounded-xl shadow-lg overflow-hidden">
           <div className="w-full h-[90vh] min-h-[1000px] max-h-[1000px] bg-gray-100 rounded-t-xl overflow-hidden relative">
             {images.length > 0 ? (
@@ -136,7 +142,10 @@ export default function PetProfilePage() {
                 autoPlay
                 transitionInterval={5000}
                 item={(item) => (
-                  <div className="relative w-full h-full cursor-pointer" onClick={() => openModal(item.itemImageSrc)}>
+                  <div
+                    className="relative w-full h-full cursor-pointer"
+                    onClick={() => openModal(item.itemImageSrc)}
+                  >
                     <img
                       src={item.itemImageSrc}
                       alt={item.alt}
@@ -165,7 +174,10 @@ export default function PetProfilePage() {
                 isLiked ? "bg-red-100 text-red-500" : "bg-white text-gray-400"
               } shadow-md transition-colors z-10`}
             >
-              <Heart className="h-6 w-6" fill={isLiked ? "currentColor" : "none"} />
+              <Heart
+                className="h-6 w-6"
+                fill={isLiked ? "currentColor" : "none"}
+              />
             </button>
           </div>
 
@@ -181,7 +193,9 @@ export default function PetProfilePage() {
 
               <div className="mb-6">
                 <h2 className="text-xl font-semibold mb-2">Descripción</h2>
-                <p className="text-gray-700">{pet.description || "No hay descripción disponible."}</p>
+                <p className="text-gray-700">
+                  {pet.description || "No hay descripción disponible."}
+                </p>
               </div>
 
               <button
@@ -195,7 +209,9 @@ export default function PetProfilePage() {
             {/* Información del centro de adopción */}
             {center && (
               <div className="border border-gray-200 rounded-lg p-6 h-fit">
-                <h2 className="text-xl font-semibold mb-4">Centro de Adopción</h2>
+                <h2 className="text-xl font-semibold mb-4">
+                  Centro de Adopción
+                </h2>
                 <h3 className="text-lg font-medium mb-2">{center.name}</h3>
 
                 <div className="space-y-3">
@@ -207,7 +223,10 @@ export default function PetProfilePage() {
                   {center.phone && (
                     <div className="flex items-center">
                       <Phone className="h-5 w-5 mr-2 text-gray-600" />
-                      <a href={`tel:${center.phone}`} className="hover:underline">
+                      <a
+                        href={`tel:${center.phone}`}
+                        className="hover:underline"
+                      >
                         {center.phone}
                       </a>
                     </div>
@@ -216,7 +235,10 @@ export default function PetProfilePage() {
                   {center.email && (
                     <div className="flex items-center">
                       <Mail className="h-5 w-5 mr-2 text-gray-600" />
-                      <a href={`mailto:${center.email}`} className="hover:underline">
+                      <a
+                        href={`mailto:${center.email}`}
+                        className="hover:underline"
+                      >
                         {center.email}
                       </a>
                     </div>
@@ -233,7 +255,9 @@ export default function PetProfilePage() {
                 {center.description && (
                   <div className="mt-4 pt-4 border-t border-gray-200">
                     <h4 className="font-medium mb-2">Sobre el centro</h4>
-                    <p className="text-sm text-gray-600">{center.description}</p>
+                    <p className="text-sm text-gray-600">
+                      {center.description}
+                    </p>
                   </div>
                 )}
               </div>
@@ -244,10 +268,10 @@ export default function PetProfilePage() {
       <Footer />
 
       {isModalOpen && (
-        <ImageModal 
-          images={images} 
-          activeImage={activeImage} 
-          onClose={closeModal} 
+        <ImageModal
+          images={images}
+          activeImage={activeImage}
+          onClose={closeModal}
         />
       )}
     </div>

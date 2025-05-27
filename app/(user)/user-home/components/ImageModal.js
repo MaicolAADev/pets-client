@@ -15,7 +15,9 @@ export default function ImageModal({ images, activeImage, onClose }) {
       <div className="w-full h-full max-w-6xl flex items-center justify-center">
         <Galleria
           value={images}
-          activeIndex={images.findIndex(img => img.itemImageSrc === activeImage)}
+          activeIndex={images.findIndex(
+            (img) => img.itemImageSrc === activeImage,
+          )}
           style={{ width: "100%", height: "90%" }}
           showThumbnails={false}
           showItemNavigators

@@ -23,7 +23,7 @@ export default function PetCardsSection() {
           : petsData?.data || petsData?.body || [];
 
         setPets(petsArray);
-        console.log(petsArray)
+        console.log(petsArray);
       } catch (err) {
         console.error("Error cargando mascotas:", err);
         setError(err.message);

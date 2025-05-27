@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { useAuthUser } from "@/app/context/AuthContext";
 
 export default function HeaderAuth() {
-  const { user } = useAuthUser() 
+  const { user } = useAuthUser();
 
   return (
     <motion.header
@@ -25,7 +25,7 @@ export default function HeaderAuth() {
               className="h-3 w-3 bg-orange-500 rounded-full"
             />
             <span className="text-lg font-semibold text-gray-900">
-            ¡Bienvenido {user?.fullName || " Usuario"}!
+              ¡Bienvenido {user?.fullName || " Usuario"}!
             </span>
           </motion.div>
         </div>
