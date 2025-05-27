@@ -13,7 +13,7 @@ export default function PetCard({ pet, isFeatured = false }) {
       console.error("Pet ID is missing");
       return;
     }
-    router.push(`/pets/${pet.id}`);
+    router.push(`/user-home/pets/${pet.id}`);
   };
 
   const handleButtonClick = (e) => {

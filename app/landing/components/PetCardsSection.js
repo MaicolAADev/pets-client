@@ -228,7 +228,7 @@ export default function PetCardsSection() {
           className="text-center mt-8 md:mt-10"
         >
           <button 
-            onClick={() => router.push("/pets")}
+            onClick={() => router.push("/user-home/more-pets")}
             className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 md:px-6 md:py-2.5 rounded-lg text-sm md:text-base font-medium inline-flex items-center transition-colors shadow-sm hover:shadow-md"
           >
             Ver más mascotas

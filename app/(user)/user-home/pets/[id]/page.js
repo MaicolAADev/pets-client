@@ -7,6 +7,7 @@ import Navigation from "@/app/landing/components/Navigation";
 import Footer from "@/app/landing/components/Footer";
 import Image from "next/image";
 import { MapPin, Heart, Phone, Mail, Clock } from "lucide-react";
+import HeaderAuth from "@/app/landing/components/HeaderAuth";
 
 export default function PetProfilePage() {
   const { id } = useParams();
@@ -25,12 +26,8 @@ export default function PetProfilePage() {
         // Obtener datos de la mascota
         const petData = await getPetById(id);
         setPet(petData);
+        setCenter(petData.adoptionCenter)
         
-        // Obtener datos del centro de adopción si está disponible
-        if (petData.adoptionCenterId) {
-          const centerData = await getAdoptionCenter(petData.adoptionCenterId);
-          setCenter(centerData);
-        }
       } catch (err) {
         setError(err.message || "No pudimos cargar la información");
         console.error(err);
@@ -44,9 +41,8 @@ export default function PetProfilePage() {
 
   const handleAdoptClick = () => {
     if (!pet) return;
-    const numeroWhatsApp = "573124783081";
-    const mensaje = `Hola, estoy interesado en adoptar a ${pet.name} (ID: ${pet.id}). ¿Podrían darme más información?`;
-    const url = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensaje)}`;
+    const mensaje = `Hola, estoy interesado en adoptar a ${pet.name}. ¿Podrían darme más información?`;
+    const url = `https://wa.me/57${center.phone}?text=${encodeURIComponent(mensaje)}`;
     window.open(url, "_blank");
   };
 
@@ -92,12 +88,12 @@ export default function PetProfilePage() {
       <main className="flex-grow flex items-center justify-center">
         <div className="text-center py-10">
           <p>Mascota no encontrada</p>
-          <button 
-            onClick={() => router.push("/pets")}
-            className="mt-4 bg-blue-600 text-white px-4 py-2 rounded"
-          >
-            Ver todas las mascotas
-          </button>
+            <button
+              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+              onClick={() => router.push("/user/more-pets")}
+            >
+              Ver mascotas
+            </button>
         </div>
       </main>
       <Footer />
@@ -106,7 +102,7 @@ export default function PetProfilePage() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
-      <Navigation />
+      <HeaderAuth />
       <main className="flex-grow container mx-auto px-4 py-10">
         <div className="bg-white rounded-xl shadow-lg overflow-hidden">
           {/* Header con imagen */}
