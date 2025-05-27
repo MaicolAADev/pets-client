@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/Ignacio-Isturiz/tempclient/compare/v1.0.0...v1.0.1) (2025-05-27)
+
+
+### Bug Fixes
+
+* images visualice ([feb716e](https://github.com/Ignacio-Isturiz/tempclient/commit/feb716e448c03c41248e237817356f21e3497b99))
+
 ## 1.0.0 (2025-05-26)
 
 ### Features
