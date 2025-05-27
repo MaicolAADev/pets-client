@@ -9,7 +9,7 @@ import CustomTabView from "@/components/CustomTabView";
 import { ToastContext } from "@/app/context/ToastContext";
 
 import { Galleria } from "primereact/galleria";
-import { MapPin, Phone, Envelope, Pencil } from "phosphor-react";
+import { Pencil } from "phosphor-react";
 
 export default function PetDetail() {
   const { id } = useParams();
@@ -110,9 +110,6 @@ function DetailView({ pet }) {
             <label className="block mb-1 font-medium">Descripción</label>
             <p>{pet.description}</p>
           </div>
-
-          {console.log("Hola mascota")}
-          {console.log(pet)}
         </div>
       ),
     },

@@ -152,7 +152,6 @@ export default function EditFormPet({ pet, onSave, edit = true, onSaveFiles }) {
 
     try {
       await apiPut(`/pets/${pet.id}`, payload);
-      showToast("success", "Mascota actualizada");
       if (onSave) onSave(payload);
     } catch (error) {
       showToast("error", "Error al actualizar la mascota");

@@ -2,12 +2,13 @@
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getPetById } from "@/app/(user)/user-home/services/petsServices";
-import { getAdoptionCenter } from "@/app/(user)/user-home/services/centersServices";
 import Navigation from "@/app/landing/components/Navigation";
 import Footer from "@/app/landing/components/Footer";
-import Image from "next/image";
 import { MapPin, Heart, Phone, Mail, Clock } from "lucide-react";
 import HeaderAuth from "@/app/landing/components/HeaderAuth";
+import { getEnv } from "@/utils/api";
+import { Galleria } from "primereact/galleria";
+import ImageModal from "../../components/ImageModal";
 
 export default function PetProfilePage() {
   const { id } = useParams();
@@ -17,17 +18,27 @@ export default function PetProfilePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isLiked, setIsLiked] = useState(false);
+  const [images, setImages] = useState([]);
+  const [activeImage, setActiveImage] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const backendUrl = getEnv();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        
-        // Obtener datos de la mascota
         const petData = await getPetById(id);
         setPet(petData);
-        setCenter(petData.adoptionCenter)
-        
+
+        const images = (petData?.files || []).map((file) => ({
+          itemImageSrc: `${backendUrl}/${file.webPath}`,
+          thumbnailImageSrc: `${backendUrl}/${file.webPath}`,
+          alt: `Imagen ${file.id}`,
+          title: file.filePath,
+        }));
+        setImages(images);
+        setCenter(petData.adoptionCenter);
       } catch (err) {
         setError(err.message || "No pudimos cargar la información");
         console.error(err);
@@ -40,15 +51,22 @@ export default function PetProfilePage() {
   }, [id]);
 
   const handleAdoptClick = () => {
-    if (!pet) return;
+    if (!pet || !center) return;
     const mensaje = `Hola, estoy interesado en adoptar a ${pet.name}. ¿Podrían darme más información?`;
     const url = `https://wa.me/57${center.phone}?text=${encodeURIComponent(mensaje)}`;
     window.open(url, "_blank");
   };
 
-  const handleLike = () => {
-    setIsLiked(!isLiked);
-    // Aquí podrías añadir una llamada a la API para guardar el like
+  const handleLike = () => setIsLiked(!isLiked);
+
+  const openModal = (img) => {
+    setActiveImage(img);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setTimeout(() => setActiveImage(null), 300);
   };
 
   if (loading) return (
@@ -70,7 +88,7 @@ export default function PetProfilePage() {
       <main className="flex-grow flex items-center justify-center">
         <div className="text-center py-10 text-red-500">
           <p>{error}</p>
-          <button 
+          <button
             onClick={() => router.push("/pets")}
             className="mt-4 bg-blue-600 text-white px-4 py-2 rounded"
           >
@@ -88,12 +106,12 @@ export default function PetProfilePage() {
       <main className="flex-grow flex items-center justify-center">
         <div className="text-center py-10">
           <p>Mascota no encontrada</p>
-            <button
-              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
-              onClick={() => router.push("/user/more-pets")}
-            >
-              Ver mascotas
-            </button>
+          <button
+            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+            onClick={() => router.push("/user/more-pets")}
+          >
+            Ver mascotas
+          </button>
         </div>
       </main>
       <Footer />
@@ -103,16 +121,44 @@ export default function PetProfilePage() {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <HeaderAuth />
-      <main className="flex-grow container mx-auto px-4 py-10">
+      <main className="flex-grow container mx-auto px-4 py-10" onClick={closeModal}>
         <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-          {/* Header con imagen */}
-          <div className="relative h-64 md:h-80 w-full">
-            <Image
-              src={pet.imageUrl || "/default-pet.jpg"}
-              alt={pet.name}
-              fill
-              className="object-cover"
-            />
+          <div className="w-full h-[90vh] min-h-[1000px] max-h-[1000px] bg-gray-100 rounded-t-xl overflow-hidden relative">
+            {images.length > 0 ? (
+              <Galleria
+                value={images}
+                numVisible={3}
+                style={{ maxWidth: "100%", height: "100%" }}
+                showThumbnails={true}
+                showItemNavigators
+                showItemNavigatorsOnHover
+                circular
+                autoPlay
+                transitionInterval={5000}
+                item={(item) => (
+                  <div className="relative w-full h-full cursor-pointer" onClick={() => openModal(item.itemImageSrc)}>
+                    <img
+                      src={item.itemImageSrc}
+                      alt={item.alt}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                )}
+                thumbnail={(item) => (
+                  <img
+                    src={item.thumbnailImageSrc}
+                    alt={item.alt}
+                    className="h-16 object-cover rounded-md"
+                  />
+                )}
+                className="custom-galleria"
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center bg-gray-200">
+                <p className="text-gray-500">No hay imágenes disponibles</p>
+              </div>
+            )}
+
             <button
               onClick={handleLike}
               className={`absolute top-4 right-4 p-3 rounded-full ${
@@ -151,13 +197,13 @@ export default function PetProfilePage() {
               <div className="border border-gray-200 rounded-lg p-6 h-fit">
                 <h2 className="text-xl font-semibold mb-4">Centro de Adopción</h2>
                 <h3 className="text-lg font-medium mb-2">{center.name}</h3>
-                
+
                 <div className="space-y-3">
                   <div className="flex items-start">
                     <MapPin className="h-5 w-5 mt-0.5 mr-2 text-gray-600" />
                     <p>{center.address}</p>
                   </div>
-                  
+
                   {center.phone && (
                     <div className="flex items-center">
                       <Phone className="h-5 w-5 mr-2 text-gray-600" />
@@ -166,7 +212,7 @@ export default function PetProfilePage() {
                       </a>
                     </div>
                   )}
-                  
+
                   {center.email && (
                     <div className="flex items-center">
                       <Mail className="h-5 w-5 mr-2 text-gray-600" />
@@ -175,7 +221,7 @@ export default function PetProfilePage() {
                       </a>
                     </div>
                   )}
-                  
+
                   {center.hours && (
                     <div className="flex items-start">
                       <Clock className="h-5 w-5 mt-0.5 mr-2 text-gray-600" />
@@ -196,6 +242,14 @@ export default function PetProfilePage() {
         </div>
       </main>
       <Footer />
+
+      {isModalOpen && (
+        <ImageModal 
+          images={images} 
+          activeImage={activeImage} 
+          onClose={closeModal} 
+        />
+      )}
     </div>
   );
 }

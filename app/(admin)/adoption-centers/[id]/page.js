@@ -210,7 +210,7 @@ function DetailView({ center }) {
             )}
           />
         ) : (
-          <p className="text-gray-500">No hay archivos disponibles.</p>
+          <p className="text-gray-500">No hay imágenes disponibles.</p>
         ),
     },
     {

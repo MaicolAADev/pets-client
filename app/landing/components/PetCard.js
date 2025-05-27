@@ -3,10 +3,20 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Mars, Venus, Heart, MapPin } from "lucide-react";
 import Image from "next/image";
+import { getEnv } from "@/utils/api";
 
 export default function PetCard({ pet, isFeatured = false }) {
   const [isLiked, setIsLiked] = useState(false);
   const router = useRouter();
+
+  const url_base = getEnv();
+  const petImage = {
+    ...pet,
+    files: pet.files.map((file) => ({
+      ...file,
+      webPath: `${url_base}/${file.webPath}`,
+    })),
+  }
 
   const handleCardClick = () => {
     if (!pet?.id) {
@@ -36,7 +46,7 @@ export default function PetCard({ pet, isFeatured = false }) {
     >
       <div className="relative h-48">
         <Image
-          src={pet.files || "/default-pet.jpg"}
+          src={petImage.files[0]?.webPath || "/default-pet.jpg"}
           alt={pet.name}
           fill
           className="object-cover"
