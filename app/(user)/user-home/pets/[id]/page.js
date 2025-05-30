@@ -41,7 +41,6 @@ export default function PetProfilePage() {
         setCenter(petData.adoptionCenter);
       } catch (err) {
         setError(err.message || "No pudimos cargar la información");
-        console.error(err);
       } finally {
         setLoading(false);
       }
@@ -170,9 +169,8 @@ export default function PetProfilePage() {
 
             <button
               onClick={handleLike}
-              className={`absolute top-4 right-4 p-3 rounded-full ${
-                isLiked ? "bg-red-100 text-red-500" : "bg-white text-gray-400"
-              } shadow-md transition-colors z-10`}
+              className={`absolute top-4 right-4 p-3 rounded-full ${isLiked ? "bg-red-100 text-red-500" : "bg-white text-gray-400"
+                } shadow-md transition-colors z-10`}
             >
               <Heart
                 className="h-6 w-6"
@@ -197,6 +195,22 @@ export default function PetProfilePage() {
                   {pet.description || "No hay descripción disponible."}
                 </p>
               </div>
+              {
+                pet.attributeValues?.length > 0 && (
+                  <div className="space-y-2 pt-4 pb-4">
+                    <label className="block mb-1 font-medium"><b>Atributos</b></label>
+                    <ul className="space-y-2">
+                      {pet.attributeValues?.map((attrValue) => (
+                        <li key={attrValue.id} className="">
+                          <span className="font-medium text-gray-700">
+                            {attrValue.attribute.name}:  {attrValue.value}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )
+              }
 
               <button
                 onClick={handleAdoptClick}

@@ -25,10 +25,17 @@ export default function CreatePet() {
       ...formData,
       adoptionCenterId: Number(formData.adoptionCenterId),
       petTypeId: Number(formData.petType.id),
+      
     };
 
     try {
       const response = await apiPost("/pets", payload);
+
+      if (response.status !== 200) {
+        showToast("error", "Error al crear la mascota");
+        return;
+      }
+
       const petId = response.data.body.id;
 
       if (pendingFiles.length > 0) {
@@ -45,9 +52,8 @@ export default function CreatePet() {
       }
 
       showToast("success", "Mascota creada correctamente");
-      router.push("/pets");
+      router.push("/pets/" + response.data.body.id);
     } catch (error) {
-      console.log(error);
       showToast("error", "Error al crear la mascota");
     }
   };

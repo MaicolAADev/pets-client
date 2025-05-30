@@ -110,6 +110,18 @@ function DetailView({ pet }) {
             <label className="block mb-1 font-medium">Descripción</label>
             <p>{pet.description}</p>
           </div>
+          <div className="space-y-2 pt-4">
+            <label className="block mb-1 font-medium"><b>Atributos</b></label>
+            <ul className="space-y-2">
+              {pet.attributeValues?.map((attrValue) => (
+                <li key={attrValue.id} className="">
+                  <span className="font-medium text-gray-700">
+                    {attrValue.attribute.name}:  {attrValue.value}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       ),
     },

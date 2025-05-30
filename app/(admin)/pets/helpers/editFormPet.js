@@ -2,7 +2,6 @@
 import { useState, useEffect, useContext } from "react";
 import { InputText } from "primereact/inputtext";
 import { InputTextarea } from "primereact/inputtextarea";
-import { Checkbox } from "primereact/checkbox";
 import { Dropdown } from "primereact/dropdown";
 import { Button } from "primereact/button";
 import { apiGet, apiPut, apiPost, getEnv } from "@/utils/api";
@@ -26,11 +25,54 @@ export default function EditFormPet({ pet, onSave, edit = true, onSaveFiles }) {
   const [filesToDelete, setFilesToDelete] = useState([]);
   const [fileToPreview, setFileToPreview] = useState(null);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [requiredAttributes, setRequiredAttributes] = useState([]);
+  const [attributeValues, setAttributeValues] = useState(
+    pet?.attributeValues?.map(av => ({
+      attribute: { id: av.attribute.id },
+      value: av.value
+    })) || []
+  );
+
+  useEffect(() => {
+    if (formData.petType.id !== null) fetchAttributes();
+  }, [formData.petType])
 
   useEffect(() => {
     fetchAdoptionCenters();
     fetchPetTypes();
   }, []);
+
+  const handleAttributeChange = (attributeId, value) => {
+    setAttributeValues((prev) => {
+      const existingIndex = prev.findIndex(
+        (av) => av.attribute.id === attributeId
+      );
+
+      if (existingIndex !== -1) {
+        const updated = [...prev];
+        updated[existingIndex] = {
+          attribute: { id: attributeId },
+          value
+        };
+        return updated;
+      }
+
+      return [...prev, {
+        attribute: { id: attributeId },
+        value
+      }];
+    });
+  };
+
+  const fetchAttributes = async () => {
+    const response = await apiGet("/pet-types/" + formData.petType.id);
+    if (response.status !== 200) {
+      showToast("error", "Error al obtener los atributos que requiere este tipo de mascota");
+      return;
+    }
+    console.log("attributes", response.data.body.attributes);
+    setRequiredAttributes(response.data.body.attributes || []);
+  };
 
   const fetchAdoptionCenters = async () => {
     try {
@@ -130,6 +172,7 @@ export default function EditFormPet({ pet, onSave, edit = true, onSaveFiles }) {
 
   const handleSubmit = async () => {
     if (!edit) {
+      formData.attributeValues = attributeValues;
       onSave(formData);
       return;
     }
@@ -144,14 +187,19 @@ export default function EditFormPet({ pet, onSave, edit = true, onSaveFiles }) {
     const payload = {
       name: formData.name,
       description: formData.description,
-      active: formData.active,
+      active: true,
       adoptionCenterId: Number(formData.adoptionCenterId),
       petType: { id: Number(formData.petType.id) },
-      attributeValues: formData.attributeValues || [],
+      attributeValues: attributeValues,
     };
 
     try {
-      await apiPut(`/pets/${pet.id}`, payload);
+      const response = await apiPut(`/pets/${pet.id}`, payload);
+      if (response.status !== 200) {
+        showToast("error", "Error al actualizar la mascota");
+        showToast("error", response.data.message);
+        return;
+      }
       if (onSave) onSave(payload);
     } catch (error) {
       showToast("error", "Error al actualizar la mascota");
@@ -189,15 +237,6 @@ export default function EditFormPet({ pet, onSave, edit = true, onSaveFiles }) {
         </div>
 
         <div>
-          <label className="block mb-1 font-medium">Activo</label>
-          <Checkbox
-            inputId="active"
-            checked={formData.active}
-            onChange={handleCheckboxChange}
-          />
-        </div>
-
-        <div>
           <label className="block mb-1 font-medium">Centro de Adopción</label>
           <Dropdown
             value={formData.adoptionCenterId}
@@ -221,6 +260,48 @@ export default function EditFormPet({ pet, onSave, edit = true, onSaveFiles }) {
             placeholder="Selecciona un tipo"
             className="w-full"
           />
+        </div>
+
+        <div className="mt-2 space-y-2">
+          {requiredAttributes.map((attribute) => (
+            <div key={attribute.id} className="flex flex-col gap-2">
+              <label className="font-medium">
+                {attribute.name}
+                {attribute.allowedValues?.length > 0 && (
+                  <span className="text-sm text-gray-500 ml-1">
+                    (Opciones: {attribute.allowedValues.join(", ")})
+                  </span>
+                )}
+              </label>
+              {attribute.allowedValues?.length > 0 ? (
+                <Dropdown
+                  value={
+                    attributeValues.find((av) => av.attribute.id === attribute.id)?.value || ""
+                  }
+                  options={attribute.allowedValues.map((val) => ({
+                    label: val,
+                    value: val,
+                  }))}
+                  onChange={(e) =>
+                    handleAttributeChange(attribute.id, e.value)
+                  }
+                  placeholder={`Selecciona ${attribute.name}`}
+                  className="w-full"
+                />
+              ) : (
+                <InputText
+                  value={
+                    attributeValues.find((av) => av.attribute.id === attribute.id)?.value || ""
+                  }
+                  onChange={(e) =>
+                    handleAttributeChange(attribute.id, e.target.value)
+                  }
+                  placeholder={`Ingresa ${attribute.name}`}
+                  className="w-full"
+                />
+              )}
+            </div>
+          ))}
         </div>
 
         <div className="space-y-2 pt-4">
@@ -273,8 +354,12 @@ export default function EditFormPet({ pet, onSave, edit = true, onSaveFiles }) {
           </div>
         </div>
 
-        <div className="pt-4">
-          <Button type="submit" label="Guardar Cambios" className="w-full" />
+        <div className="mt-auto pt-4">
+          <Button
+            type="submit"
+            label="Guardar cambios"
+            className="w-full h-9 bg-blue-500 text-white font-bold"
+          />
         </div>
       </form>
 
