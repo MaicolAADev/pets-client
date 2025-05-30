@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.2](https://github.com/Ignacio-Isturiz/tempclient/compare/v1.0.1...v1.0.2) (2025-05-30)
+
+
+### Bug Fixes
+
+* images visualice ([d78673b](https://github.com/Ignacio-Isturiz/tempclient/commit/d78673bdfbb287bb4f3269301dc73d1c1f430efa))
+* **pets:** attributes function ([1ce391d](https://github.com/Ignacio-Isturiz/tempclient/commit/1ce391dd5d329cd7be4e037ce699aa1049efe534))
+
 ## [1.0.1](https://github.com/Ignacio-Isturiz/tempclient/compare/v1.0.0...v1.0.1) (2025-05-27)
 
 
