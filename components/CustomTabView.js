@@ -4,7 +4,6 @@ import { TabView, TabPanel } from "primereact/tabview";
 import { useRouter } from "next/navigation";
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 
-
 export default function CustomTabView({ tabs = [] }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const router = useRouter();
