@@ -9,6 +9,7 @@ export default function CustomTabView({ tabs = [] }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const router = useRouter();
 
+  
   return (
     <div className="items-center justify-center">
       <TabView
